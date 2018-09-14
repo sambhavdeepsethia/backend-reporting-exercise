@@ -2,26 +2,26 @@ package com.averollc.backendreportingexericse.model;
 
 public class Data {
 
-	private final  String value;
-
 	private final TimeFrame timeFrame;
+	private final  String value;
 	
-	public Data(String value, TimeFrame timeFrame) {
-		this.value = value;
+	
+	public Data(TimeFrame timeFrame, String value) {
 		this.timeFrame = timeFrame;
-	}
-
-	public String getValue() {
-		return value;
+		this.value = value;
 	}
 
 	public TimeFrame getTimeFrame() {
 		return timeFrame;
 	}
+	
+	public String getValue() {
+		return value;
+	}
 
 	@Override
 	public String toString() {
-		return "DataPojo [value = " + value + ", timeFrame = " + timeFrame + "]";
+		return "DataPojo [timeFrame = " + timeFrame + ", value = " + value + "]";
 	}
 
 }

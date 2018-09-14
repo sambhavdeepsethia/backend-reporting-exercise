@@ -3,19 +3,15 @@ package com.averollc.backendreportingexericse.model;
 public class EmployeeData extends Data {
 	
     private final String employee;
-    
-    
       
-    public EmployeeData(String value, TimeFrame timeFrame, String employee) {
-		super(value, timeFrame);
+ 	public EmployeeData(TimeFrame timeFrame, String value, String employee) {
+		super(timeFrame, value);
 		this.employee = employee;
 	}
-
-
 
 	@Override
     public String toString()
     {
-        return "ClassPojo [value = "+this.getValue()+", employee = "+employee+", timeFrame = "+this.getTimeFrame()+"]";
+        return "EmployeeData [timeFrame = "+this.getTimeFrame()+", value = "+this.getValue()+ ", employee = "+employee+"]";
     }
 }
