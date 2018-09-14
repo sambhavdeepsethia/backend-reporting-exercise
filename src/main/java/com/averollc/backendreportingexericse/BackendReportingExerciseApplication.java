@@ -3,7 +3,7 @@ package com.averollc.backendreportingexericse;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import dao.FetchData;
+import com.averollc.backendreportingexericse.dao.FetchData;
 
 @SpringBootApplication
 public class BackendReportingExerciseApplication {
