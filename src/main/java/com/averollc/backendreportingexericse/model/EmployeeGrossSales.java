@@ -1,15 +1,17 @@
 package com.averollc.backendreportingexericse.model;
 
+import java.util.ArrayList;
+
 public class EmployeeGrossSales extends ReportingAttributes{
 
-		private EmployeeData[] employeeData;
+		private ArrayList<EmployeeData> employeeData;
 		
-		public EmployeeGrossSales(String report, String timeInterval, EmployeeData[] employeeData) {
+		public EmployeeGrossSales(String report, String timeInterval, ArrayList<EmployeeData> employeeData) {
 			super(report,timeInterval);
 			this.employeeData = employeeData;
 		}
 		
-		public EmployeeData[] getEmployeeData() {
+		public ArrayList<EmployeeData> getEmployeeData() {
 			return employeeData;
 		}
 

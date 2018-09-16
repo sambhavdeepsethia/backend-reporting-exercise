@@ -1,15 +1,17 @@
 package com.averollc.backendreportingexericse.model;
 
+import java.util.ArrayList;
+
 public class LaborCostPercentage extends ReportingAttributes{
 
-	private Data[] data;
+	private ArrayList<Data> data;
 
-	public LaborCostPercentage(String report, String timeInterval, Data[] data) {
+	public LaborCostPercentage(String report, String timeInterval, ArrayList<Data> data) {
 		super(report, timeInterval);
 		this.data = data;
 	}
 
-	public Data[] getData() {
+	public ArrayList<Data> getData() {
 		return data;
-	}
+	}	
 }

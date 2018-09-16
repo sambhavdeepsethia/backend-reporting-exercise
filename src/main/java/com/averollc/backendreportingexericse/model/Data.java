@@ -3,10 +3,10 @@ package com.averollc.backendreportingexericse.model;
 public class Data {
 
 	private final TimeFrame timeFrame;
-	private final  String value;
+	private final  double value;
 	
 	
-	public Data(TimeFrame timeFrame, String value) {
+	public Data(TimeFrame timeFrame, double value) {
 		this.timeFrame = timeFrame;
 		this.value = value;
 	}
@@ -15,7 +15,7 @@ public class Data {
 		return timeFrame;
 	}
 	
-	public String getValue() {
+	public double getValue() {
 		return value;
 	}
 

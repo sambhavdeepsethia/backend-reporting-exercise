@@ -4,7 +4,7 @@ public class EmployeeData extends Data {
 	
     private final String employee;
       
- 	public EmployeeData(TimeFrame timeFrame, String value, String employee) {
+ 	public EmployeeData(TimeFrame timeFrame, double value, String employee) {
 		super(timeFrame, value);
 		this.employee = employee;
 	}
