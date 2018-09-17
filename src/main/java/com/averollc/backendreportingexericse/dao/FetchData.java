@@ -18,7 +18,7 @@ public class FetchData
     private static final String headerFieldName = "Authorization";
     private static final String headerFieldValue = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1MzYyNjE2NDUsImV4cCI6MTUzODg1MzY0NX0.2VYZV5uW24EjdrCC-kJVfYJXSrf5qw4qSfJbqWl7q6o";
 
-    public static void getData()
+    public static void getData() throws IOException
     {
 
         CreateDirectories.createDirectories(baseDir, posAPIs);
