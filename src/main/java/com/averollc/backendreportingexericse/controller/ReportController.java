@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.averollc.backendreportingexericse.dao.FetchData;
 import com.averollc.backendreportingexericse.model.EmployeeGrossSales;
 import com.averollc.backendreportingexericse.model.FoodCostPercentage;
 import com.averollc.backendreportingexericse.model.ReportingAttributes;
@@ -38,11 +39,11 @@ public class ReportController {
 //		System.out.println("start: "+ startTime);
 //		System.out.println("end: "+ endTime);
 		
-		if(report.equalsIgnoreCase("FCP")) {
-			reportingAttributes = computeFCP(business_id, timeInterval, startTime, endTime);
-		}
-		else if(report.equalsIgnoreCase("LCP")) {
+		if(report.equalsIgnoreCase("LCP")) {
 			reportingAttributes = computeLCP(business_id, timeInterval, startTime, endTime);
+		}
+		else if(report.equalsIgnoreCase("FCP")) {
+			reportingAttributes = computeFCP(business_id, timeInterval, startTime, endTime);
 		}
 		else if(report.equalsIgnoreCase("EGS")) {
 			reportingAttributes = computeEGS(business_id, timeInterval, startTime, endTime);
@@ -57,7 +58,27 @@ public class ReportController {
 
 	private ReportingAttributes computeLCP(String business_id, String timeInterval, String startTime,
 			String endTime) throws Exception {
+		
+		ReportingAttributes reportingAttributes = null;
+		List<TimeFrame> timeframes = getTimeFrameList(timeInterval, startTime, endTime);
+		List<Double> payRates = FetchData.getPayRateByHour(business_id, startTime, endTime);
+		
+		
+		return reportingAttributes;
+	}
+	private ReportingAttributes computeFCP(String business_id, String timeInterval, String startTime,
+			String endTime) throws Exception {
 		// TODO Auto-generated method stub
+					
+		return null;
+	}
+	
+	private ReportingAttributes computeEGS(String business_id, String timeInterval, String startTime,
+			String endTime) throws Exception {
+				return null;
+	}
+	
+	private List<TimeFrame> getTimeFrameList(String timeInterval, String startTime, String endTime) throws Exception {
 		
         final DateTimeFormatter formatter = new DateTimeFormatterBuilder().appendInstant(3).toFormatter();
         final ZonedDateTime zonedStartTime = ZonedDateTime.parse(startTime);
@@ -108,27 +129,7 @@ public class ReportController {
 				throw new Exception("Invalid timeInterval");
 		
 		}
-		return null;
-	}
-
-	private Object DateTimeFormatterBuilder() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	private ReportingAttributes computeFCP(String business_id, String timeInterval, String startTime,
-			String endTime) throws Exception {
-		// TODO Auto-generated method stub
-					
-		return null;
-	}
-	
-	private ReportingAttributes computeEGS(String business_id, String timeInterval, String startTime,
-			String endTime) throws Exception {
-				return null;
-		
-		
+		return timeFrames;
 	}
 
 
