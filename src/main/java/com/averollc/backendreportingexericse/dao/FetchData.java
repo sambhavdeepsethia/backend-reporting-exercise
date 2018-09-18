@@ -26,19 +26,34 @@ public class FetchData
 
     }
 
-    public static String getChecks(final String business_id, final String startTime, final String endTime)
+    public static List<String> getCheckIDs(final String business_id, final String startTime, final String endTime) throws IOException
     {
-        return null;
+        final File checksJson = new File(baseDir + "checks" + File.separator + "checks.json");
+        final Filter checkFilter = Filter
+            .filter(Criteria.where("business_id").is(business_id).and("closed").is(true).and("closed_at").gte(startTime).and("closed_at").lte(endTime));
+        final List<String> checkIDs = JsonPath.parse(checksJson).read("$.data[?].id", checkFilter);
+
+        return checkIDs;
     }
 
-    public static List<Double> getPayRateByHour(final String business_id, final String startTime, final String endTime) throws IOException
+    public static List<Object> getPayRateByHour(final String business_id, final String startTime, final String endTime) throws IOException
     {
 
-        final File file = new File(baseDir + "laborEntries" + File.separator + "laborEntries.json");
+        final File laborEntriesJson = new File(baseDir + "laborEntries" + File.separator + "laborEntries.json");
         final Filter filter = Filter.filter(Criteria.where("business_id").is(business_id).and("clock_in").lte(startTime).and("clock_out").gte(endTime));
-        final List<Double> payRates = JsonPath.parse(file).read("$.data[?].pay_rate", filter);
+        final List<Object> payRates = JsonPath.parse(laborEntriesJson).read("$.data[?].pay_rate", filter);
 
         return payRates;
+
+    }
+
+    public static List<Object> getPricesForChecks(final String business_id, final List<String> checkIDs) throws IOException
+    {
+        final File orderedItemsJson = new File(baseDir + "orderedItems" + File.separator + "orderedItems.json");
+        final Filter pricesFilter = Filter.filter(Criteria.where("business_id").is(business_id).and("voided").is(false).and("check_id").in(checkIDs));
+        final List<Object> prices = JsonPath.parse(orderedItemsJson).read("$.data[?].price", pricesFilter);
+
+        return prices;
 
     }
 

@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 
 import org.springframework.http.HttpEntity;
@@ -63,10 +62,9 @@ public class DataConsumer
 
     private static void dataWriter(final String data, final String fileName)
     {
-
         try {
 
-            Files.write(Paths.get(fileName), data.getBytes(), StandardOpenOption.APPEND);
+            Files.write(Paths.get(fileName), data.getBytes());
         }
         catch (final IOException e) {
             e.printStackTrace();
