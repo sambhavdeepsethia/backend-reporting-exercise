@@ -8,6 +8,9 @@ import com.jayway.jsonpath.Criteria;
 import com.jayway.jsonpath.Filter;
 import com.jayway.jsonpath.JsonPath;
 
+/**
+ * @author Merceed
+ */
 public class FetchData
 {
 
@@ -18,6 +21,9 @@ public class FetchData
     private static final String headerFieldName = "Authorization";
     private static final String headerFieldValue = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1MzYyNjE2NDUsImV4cCI6MTUzODg1MzY0NX0.2VYZV5uW24EjdrCC-kJVfYJXSrf5qw4qSfJbqWl7q6o";
 
+    /**
+     * @throws IOException
+     */
     public static void getData() throws IOException
     {
 
@@ -36,13 +42,19 @@ public class FetchData
         return checkIDs;
     }
 
+    /**
+     * @param business_id
+     * @param startTime
+     * @param endTime
+     * @return
+     * @throws IOException
+     */
     public static List<Object> getPayRateByHour(final String business_id, final String startTime, final String endTime) throws IOException
     {
 
         final File laborEntriesJson = new File(baseDir + "laborEntries" + File.separator + "laborEntries.json");
-        final Filter filter = Filter.filter(Criteria.where("business_id").is(business_id).and("clock_in").lte(startTime).and("clock_out").gte(endTime));
-        final List<Object> payRates = JsonPath.parse(laborEntriesJson).read("$.data[?].pay_rate", filter);
-
+        final Filter payRateFilter = Filter.filter(Criteria.where("business_id").is(business_id).and("clock_in").lte(startTime).and("clock_out").gte(endTime));
+        final List<Object> payRates = JsonPath.parse(laborEntriesJson).read("$.data[?].pay_rate", payRateFilter);
         return payRates;
 
     }
@@ -54,6 +66,22 @@ public class FetchData
         final List<Object> prices = JsonPath.parse(orderedItemsJson).read("$.data[?].price", pricesFilter);
 
         return prices;
+
+    }
+
+    public static List<Object> getPayRateByDay(final String business_id, final String startTime, final String endTime) throws IOException
+    {
+
+        final File laborEntriesJson = new File(baseDir + "laborEntries" + File.separator + "laborEntries.json");
+        final Filter filter1 = Filter.filter(Criteria.where("business_id").is(business_id).and("clock_in").lte(startTime).and("clock_out").gte(startTime));
+        final Filter filter2 = Filter
+            .filter(Criteria.where("business_id").is(business_id).and("clock_in").gt(startTime).and("clock_in").lte(endTime).and("clock_in").lt("clock_out"));
+        // final Filter filter3 = Filter.filter(Criteria.where("business_id").is(business_id).and("clock_in").lte(startTime).and("clock_out").gte(endTime));
+        // final Filter filter4 = Filter.filter(Criteria.where("business_id").is(business_id).and("clock_in").gte(startTime).and("clock_out").gte(endTime));
+
+        final List<String> employeesWithFilter1 = JsonPath.parse(laborEntriesJson).read("$.data[?]", filter1);
+
+        return null;
 
     }
 

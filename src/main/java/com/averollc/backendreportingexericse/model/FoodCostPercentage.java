@@ -1,18 +1,21 @@
 package com.averollc.backendreportingexericse.model;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class FoodCostPercentage extends ReportingAttributes {
-	
-	private ArrayList<Data> data;
+public class FoodCostPercentage extends ReportingAttributes
+{
 
-	public FoodCostPercentage(String report, String timeInterval, ArrayList<Data> data) {
-		super(report, timeInterval);
-		this.data = data;
-	}
+    private final List<Data> data;
 
-	public ArrayList<Data> getData() {
-		return data;
-	}	
-	
+    public FoodCostPercentage(final String report, final String timeInterval, final List<Data> data)
+    {
+        super(report, timeInterval);
+        this.data = data;
+    }
+
+    public List<Data> getData()
+    {
+        return data;
+    }
+
 }

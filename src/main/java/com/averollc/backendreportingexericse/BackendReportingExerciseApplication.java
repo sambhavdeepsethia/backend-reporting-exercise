@@ -28,8 +28,8 @@ public class BackendReportingExerciseApplication
         final File orderedItemsJson = new File(baseDir + "orderedItems" + File.separator + "orderedItems.json");
 
         final Filter filter = Filter.filter(Criteria.where("business_id").is(business_id).and("clock_in").lte(startTime).and("clock_out").gte(endTime));
-        List<Object> payRateTemp = new ArrayList<>();
-        payRateTemp = JsonPath.parse(laborEntriesJson).read("$.data[?].pay_rate", filter);
+        List<Object> payRate = new ArrayList<>();
+        payRate = JsonPath.parse(laborEntriesJson).read("$.data[?]", filter);
 
         final Filter checkFilter = Filter
             .filter(Criteria.where("business_id").is(business_id).and("closed").is(true).and("closed_at").gte(startTime).and("closed_at").lte(endTime));
@@ -37,6 +37,8 @@ public class BackendReportingExerciseApplication
         final Filter pricesFilter = Filter.filter(Criteria.where("business_id").is(business_id).and("voided").is(false).and("check_id").in(checkIDs));
         final List<Object> prices = JsonPath.parse(orderedItemsJson).read("$.data[?].price", pricesFilter);
 
+        System.out.println(payRate);
+        System.out.println(prices);
         // FetchData.getData();
         // SpringApplication.run(BackendReportingExerciseApplication.class, args);
 
