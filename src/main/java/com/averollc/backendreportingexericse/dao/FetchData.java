@@ -2,8 +2,16 @@ package com.averollc.backendreportingexericse.dao;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
+import com.averollc.backendreportingexericse.model.LaborEntry;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.jayway.jsonpath.Criteria;
 import com.jayway.jsonpath.Filter;
 import com.jayway.jsonpath.JsonPath;
@@ -69,20 +77,46 @@ public class FetchData
 
     }
 
-    public static List<Object> getPayRateByDay(final String business_id, final String startTime, final String endTime) throws IOException
+    public static double getLaborCostByDay(final String business_id, final String startTime, final String endTime) throws IOException
     {
 
         final File laborEntriesJson = new File(baseDir + "laborEntries" + File.separator + "laborEntries.json");
+        final ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
         final Filter filter1 = Filter.filter(Criteria.where("business_id").is(business_id).and("clock_in").lte(startTime).and("clock_out").gte(startTime));
         final Filter filter2 = Filter
             .filter(Criteria.where("business_id").is(business_id).and("clock_in").gt(startTime).and("clock_in").lte(endTime).and("clock_in").lt("clock_out"));
-        // final Filter filter3 = Filter.filter(Criteria.where("business_id").is(business_id).and("clock_in").lte(startTime).and("clock_out").gte(endTime));
-        // final Filter filter4 = Filter.filter(Criteria.where("business_id").is(business_id).and("clock_in").gte(startTime).and("clock_out").gte(endTime));
 
-        final List<String> employeesWithFilter1 = JsonPath.parse(laborEntriesJson).read("$.data[?]", filter1);
+        final List<LaborEntry> laborEntriesWithFilter1 = mapper.convertValue(JsonPath.parse(laborEntriesJson).read("$.data[?]", filter1),
+            new TypeReference<List<LaborEntry>>() {});
+        final List<LaborEntry> laborEntriesWithFilter2 = mapper.convertValue(JsonPath.parse(laborEntriesJson).read("$.data[?]", filter2),
+            new TypeReference<List<LaborEntry>>() {});
 
-        return null;
+        final List<LaborEntry> totalLaborEntries = new ArrayList<>(laborEntriesWithFilter1);
+        totalLaborEntries.addAll(laborEntriesWithFilter2);
 
+        double totalLaborCost = 0;
+        final ZonedDateTime start = ZonedDateTime.parse(startTime);
+        final ZonedDateTime end = ZonedDateTime.parse(endTime);
+
+        for (final LaborEntry l : totalLaborEntries) {
+            double hours = 0;
+            LocalDateTime cin = l.getClock_in().toLocalDateTime();
+            LocalDateTime cout = l.getClock_out().toLocalDateTime();
+
+            if (l.getClock_in().isBefore(start)) {
+                cin = start.toLocalDateTime();
+            }
+            if (l.getClock_out().isAfter(end)) {
+                cout = end.toLocalDateTime();
+            }
+
+            final Duration d = Duration.between(cin, cout);
+            hours = d.toHours();
+            totalLaborCost += (hours * l.getPay_rate());
+        }
+
+        return totalLaborCost;
     }
 
     // final List<String> x = JsonPath.read(json, "$.data[?(@.closed_at>=\"2018-06-02T00:00:00.000Z\")]");

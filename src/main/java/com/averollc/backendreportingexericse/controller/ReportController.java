@@ -60,6 +60,15 @@ public class ReportController
         case HOUR:
             reportingAttributes = computeLCPByHour(business_id, report, timeInterval, timeIntervalEnum, startTime, endTime);
         break;
+        case DAY:
+            reportingAttributes = computeLCPByDay(business_id, report, timeInterval, timeIntervalEnum, startTime, endTime);
+        break;
+        case WEEK:
+            reportingAttributes = computeLCPByDay(business_id, report, timeInterval, timeIntervalEnum, startTime, endTime);
+        break;
+        case MONTH:
+            reportingAttributes = computeLCPByDay(business_id, report, timeInterval, timeIntervalEnum, startTime, endTime);
+        break;
         default:
             throw new Exception("Invalid timeInterval");
 
@@ -109,6 +118,39 @@ public class ReportController
 
         return reportingAttributes;
 
+    }
+
+    private ReportingAttributes computeLCPByDay(final String business_id, final String report, final String timeInterval, final TimeInterval timeIntervalEnum,
+        final String startTime, final String endTime) throws Exception
+    {
+        final ReportingAttributes reportingAttributes;
+        final List<Data> data = new ArrayList<>();
+        final List<TimeFrame> timeframes = ReportService.getTimeFrameList(timeIntervalEnum, startTime, endTime);
+
+        for (final TimeFrame t : timeframes) {
+
+            final double totalLaborCost = FetchData.getLaborCostByDay(business_id, t.getStart(), t.getEnd());
+            final List<String> checkIDs = FetchData.getCheckIDs(business_id, t.getStart(), t.getEnd());
+            final List<Object> prices = FetchData.getPricesForChecks(business_id, checkIDs);
+            final double totalPrice = ReportService.getSumOfDoubles(prices);
+            final double value;
+
+            if ((totalLaborCost == 0) || (totalPrice == 0)) {
+                value = 0;
+            }
+            else {
+                value = ((totalLaborCost / totalPrice) * 100);
+
+            }
+
+            System.out.println("totalLaborCost: " + totalLaborCost);
+            System.out.println("totalPrice: " + totalPrice);
+            data.add(new Data(t, value));
+        }
+
+        reportingAttributes = new LaborCostPercentage(report, timeInterval, data);
+
+        return reportingAttributes;
     }
 
 }
