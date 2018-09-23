@@ -37,7 +37,6 @@ public class DataConsumer
             if (!file.exists()) {
                 file.createNewFile();
             }
-            System.out.println("Count: " + count);
             final String jsonData = restTemplate.exchange(baseURI + api + "?limit=" + count, HttpMethod.GET, entity, String.class).getBody();
             dataWriter(jsonData, fileName);
 

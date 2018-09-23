@@ -2,9 +2,6 @@ package com.averollc.backendreportingexericse.dao;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,9 +74,8 @@ public class FetchData
 
     }
 
-    public static double getLaborCostByDay(final String business_id, final String startTime, final String endTime) throws IOException
+    public static List<LaborEntry> getLaborEntries(final String business_id, final String startTime, final String endTime) throws IOException
     {
-
         final File laborEntriesJson = new File(baseDir + "laborEntries" + File.separator + "laborEntries.json");
         final ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
@@ -95,30 +91,8 @@ public class FetchData
         final List<LaborEntry> totalLaborEntries = new ArrayList<>(laborEntriesWithFilter1);
         totalLaborEntries.addAll(laborEntriesWithFilter2);
 
-        double totalLaborCost = 0;
-        final ZonedDateTime start = ZonedDateTime.parse(startTime);
-        final ZonedDateTime end = ZonedDateTime.parse(endTime);
+        return totalLaborEntries;
 
-        for (final LaborEntry l : totalLaborEntries) {
-            double hours = 0;
-            LocalDateTime cin = l.getClock_in().toLocalDateTime();
-            LocalDateTime cout = l.getClock_out().toLocalDateTime();
-
-            if (l.getClock_in().isBefore(start)) {
-                cin = start.toLocalDateTime();
-            }
-            if (l.getClock_out().isAfter(end)) {
-                cout = end.toLocalDateTime();
-            }
-
-            final Duration d = Duration.between(cin, cout);
-            hours = d.toHours();
-            totalLaborCost += (hours * l.getPay_rate());
-        }
-
-        return totalLaborCost;
     }
-
-    // final List<String> x = JsonPath.read(json, "$.data[?(@.closed_at>=\"2018-06-02T00:00:00.000Z\")]");
 
 }
