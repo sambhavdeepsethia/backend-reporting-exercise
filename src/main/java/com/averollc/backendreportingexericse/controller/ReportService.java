@@ -85,13 +85,13 @@ public class ReportService
         return sum;
     }
 
-    public static double computeTotalLaborCost(final List<LaborEntry> totalLaborEntries, final String startTime, final String endTime)
+    public static double computeTotalLaborCost(final List<LaborEntry> laborEntires, final String startTime, final String endTime)
     {
         double totalLaborCost = 0;
         final ZonedDateTime start = ZonedDateTime.parse(startTime);
         final ZonedDateTime end = ZonedDateTime.parse(endTime);
 
-        for (final LaborEntry l : totalLaborEntries) {
+        for (final LaborEntry l : laborEntires) {
             double hours = 0;
             LocalDateTime cin = l.getClock_in().toLocalDateTime();
             LocalDateTime cout = l.getClock_out().toLocalDateTime();

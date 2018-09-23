@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.averollc.backendreportingexericse.model.LaborEntry;
+import com.averollc.backendreportingexericse.model.OrderedItem;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -74,7 +75,8 @@ public class FetchData
 
     }
 
-    public static List<LaborEntry> getLaborEntries(final String business_id, final String startTime, final String endTime) throws IOException
+    public static List<LaborEntry> getLaborEntries(final String business_id, final String startTime, final String endTime)
+        throws IllegalArgumentException, IOException
     {
         final File laborEntriesJson = new File(baseDir + "laborEntries" + File.separator + "laborEntries.json");
         final ObjectMapper mapper = new ObjectMapper();
@@ -93,6 +95,19 @@ public class FetchData
 
         return totalLaborEntries;
 
+    }
+
+    public static List<OrderedItem> getOrderedItems(final String business_id, final List<String> checkIDs) throws IllegalArgumentException, IOException
+    {
+        final File orderedItemsJson = new File(baseDir + "orderedItems" + File.separator + "orderedItems.json");
+        final ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        final Filter filter = Filter.filter(Criteria.where("business_id").is(business_id).and("check_id").in(checkIDs));
+
+        final List<OrderedItem> orderedItems = mapper.convertValue(JsonPath.parse(orderedItemsJson).read("$.data[?]", filter),
+            new TypeReference<List<OrderedItem>>() {});
+
+        return orderedItems;
     }
 
 }
