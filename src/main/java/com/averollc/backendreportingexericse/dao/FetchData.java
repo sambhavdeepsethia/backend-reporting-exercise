@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.averollc.backendreportingexericse.model.Check;
 import com.averollc.backendreportingexericse.model.LaborEntry;
 import com.averollc.backendreportingexericse.model.OrderedItem;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -109,5 +110,20 @@ public class FetchData
 
         return orderedItems;
     }
+
+    public static List<Check> getChecks(final String business_id, final String startTime, final String endTime) throws IOException
+    {
+        final File checksJson = new File(baseDir + "checks" + File.separator + "checks.json");
+        final ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+
+        final Filter checkFilter = Filter
+            .filter(Criteria.where("business_id").is(business_id).and("closed").is(true).and("closed_at").gte(startTime).and("closed_at").lte(endTime));
+        final List<Check> checks = mapper.convertValue(JsonPath.parse(checksJson).read("$.data[?]", checkFilter), new TypeReference<List<Check>>() {});
+
+        return checks;
+    }
+
+    // public static double get
 
 }

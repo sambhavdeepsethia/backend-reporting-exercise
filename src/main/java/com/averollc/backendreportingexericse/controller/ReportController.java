@@ -1,7 +1,9 @@
 package com.averollc.backendreportingexericse.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.averollc.backendreportingexericse.dao.FetchData;
+import com.averollc.backendreportingexericse.model.Check;
 import com.averollc.backendreportingexericse.model.Data;
 import com.averollc.backendreportingexericse.model.FoodCostPercentage;
 import com.averollc.backendreportingexericse.model.LaborCostPercentage;
@@ -42,7 +45,7 @@ public class ReportController
             reportingAttributes = computeFCP(business_id, report, timeInterval, timeIntervalEnum, startTime, endTime);
         }
         else if (report.equalsIgnoreCase("EGS")) {
-            reportingAttributes = computeEGS(business_id, timeInterval, startTime, endTime);
+            reportingAttributes = computeEGS(business_id, report, timeInterval, timeIntervalEnum, startTime, endTime);
         }
         else {
             throw new Exception("Incorrect Report type passed");
@@ -51,30 +54,38 @@ public class ReportController
         return reportingAttributes;
     }
 
-    // private ReportingAttributes computeLCP(final String business_id, final String report, final String timeInterval, final String startTime,
-    // final String endTime) throws Exception
-    // {
-    // ReportingAttributes reportingAttributes;
-    // final TimeInterval timeIntervalEnum = TimeInterval.valueOf(timeInterval.toUpperCase());
-    // switch (timeIntervalEnum) {
-    // case HOUR:
-    // reportingAttributes = computeLCP(business_id, report, timeInterval, timeIntervalEnum, startTime, endTime);
-    // break;
-    // case DAY:
-    // reportingAttributes = computeLCP(business_id, report, timeInterval, timeIntervalEnum, startTime, endTime);
-    // break;
-    // case WEEK:
-    // reportingAttributes = computeLCP(business_id, report, timeInterval, timeIntervalEnum, startTime, endTime);
-    // break;
-    // case MONTH:
-    // reportingAttributes = computeLCP(business_id, report, timeInterval, timeIntervalEnum, startTime, endTime);
-    // break;
-    // default:
-    // throw new Exception("Invalid timeInterval");
-    //
-    // }
-    // return reportingAttributes;
-    // }
+    private ReportingAttributes computeLCP(final String business_id, final String report, final String timeInterval, final TimeInterval timeIntervalEnum,
+        final String startTime, final String endTime) throws Exception
+    {
+        final ReportingAttributes reportingAttributes;
+        final List<Data> data = new ArrayList<>();
+        final List<TimeFrame> timeframes = ReportService.getTimeFrameList(timeIntervalEnum, startTime, endTime);
+
+        for (final TimeFrame t : timeframes) {
+
+            final List<LaborEntry> laborEntires = FetchData.getLaborEntries(business_id, t.getStart(), t.getEnd());
+            final double totalLaborCost = ReportService.computeTotalLaborCost(laborEntires, t.getStart(), t.getEnd());
+            final List<String> checkIDs = FetchData.getCheckIDs(business_id, t.getStart(), t.getEnd());
+            final List<Object> prices = FetchData.getPricesForChecks(business_id, checkIDs);
+            final double totalPrice = ReportService.computeSum(prices);
+            final double value;
+
+            if ((totalLaborCost == 0) || (totalPrice == 0)) {
+                value = 0;
+            }
+            else {
+                value = ((totalLaborCost / totalPrice) * 100);
+
+            }
+            System.out.println("totalLaborCost: " + totalLaborCost);
+            System.out.println("totalPrice: " + totalPrice);
+            data.add(new Data(t, value));
+        }
+
+        reportingAttributes = new LaborCostPercentage(report, timeInterval, data);
+
+        return reportingAttributes;
+    }
 
     private ReportingAttributes computeFCP(final String business_id, final String report, final String timeInterval, final TimeInterval timeIntervalEnum,
         final String startTime, final String endTime) throws Exception
@@ -116,76 +127,72 @@ public class ReportController
 
     }
 
-    private ReportingAttributes computeEGS(final String business_id, final String timeInterval, final String startTime, final String endTime) throws Exception
-    {
-        return null;
-    }
-
-    private ReportingAttributes computeLCPByHour(final String business_id, final String report, final String timeInterval, final TimeInterval timeIntervalEnum,
+    private ReportingAttributes computeEGS(final String business_id, final String report, final String timeInterval, final TimeInterval timeIntervalEnum,
         final String startTime, final String endTime) throws Exception
     {
-        final ReportingAttributes reportingAttributes;
+        final ReportingAttributes reportingAttributes = null;
         final List<Data> data = new ArrayList<>();
         final List<TimeFrame> timeframes = ReportService.getTimeFrameList(timeIntervalEnum, startTime, endTime);
 
         for (final TimeFrame t : timeframes) {
 
-            final List<Object> payRates = FetchData.getPayRateByHour(business_id, t.getStart(), t.getEnd());
-            final List<String> checkIDs = FetchData.getCheckIDs(business_id, t.getStart(), t.getEnd());
-            final List<Object> prices = FetchData.getPricesForChecks(business_id, checkIDs);
+            final List<Check> checks = FetchData.getChecks(business_id, t.getStart(), t.getEnd());
+            final Map<String, String> map = new HashMap<>();
+            checks.forEach(c -> map.put(c.getEmployee_id(), c.getName()));
+            final List<String> checkIDs = new ArrayList<>();
+            checks.forEach(c -> checkIDs.add(c.getId()));
+            final List<OrderedItem> orderedItems = FetchData.getOrderedItems(business_id, checkIDs);
 
-            final double totalPay = ReportService.computeSum(payRates);
-            final double totalPrice = ReportService.computeSum(prices);
-            final double value;
-            if ((totalPrice == 0) || (totalPay == 0)) {
-                value = 0;
+            final Map<String, Double> map2 = new HashMap<>();
+            for (final OrderedItem o : orderedItems) {
+                if (!o.isVoided()) {
+                    if (map2.containsKey(o.getEmployee_id())) {
+                        final double value = map2.get(o.getEmployee_id());
+                        map2.put(o.getEmployee_id(), value + o.getPrice());
+                    }
+                    else {
+                        map2.put(o.getEmployee_id(), o.getPrice());
+                    }
+                }
             }
-            else {
-                value = ((totalPay / totalPrice) * 100);
 
-            }
-            System.out.println("totalLaborCost: " + totalPay);
-            System.out.println("totalPrice: " + totalPrice);
-            data.add(new Data(t, Math.round(value)));
         }
-
-        reportingAttributes = new LaborCostPercentage(report, timeInterval, data);
-
-        return reportingAttributes;
-
-    }
-
-    private ReportingAttributes computeLCP(final String business_id, final String report, final String timeInterval, final TimeInterval timeIntervalEnum,
-        final String startTime, final String endTime) throws Exception
-    {
-        final ReportingAttributes reportingAttributes;
-        final List<Data> data = new ArrayList<>();
-        final List<TimeFrame> timeframes = ReportService.getTimeFrameList(timeIntervalEnum, startTime, endTime);
-
-        for (final TimeFrame t : timeframes) {
-
-            final List<LaborEntry> laborEntires = FetchData.getLaborEntries(business_id, t.getStart(), t.getEnd());
-            final double totalLaborCost = ReportService.computeTotalLaborCost(laborEntires, t.getStart(), t.getEnd());
-            final List<String> checkIDs = FetchData.getCheckIDs(business_id, t.getStart(), t.getEnd());
-            final List<Object> prices = FetchData.getPricesForChecks(business_id, checkIDs);
-            final double totalPrice = ReportService.computeSum(prices);
-            final double value;
-
-            if ((totalLaborCost == 0) || (totalPrice == 0)) {
-                value = 0;
-            }
-            else {
-                value = ((totalLaborCost / totalPrice) * 100);
-
-            }
-            System.out.println("totalLaborCost: " + totalLaborCost);
-            System.out.println("totalPrice: " + totalPrice);
-            data.add(new Data(t, value));
-        }
-
-        reportingAttributes = new LaborCostPercentage(report, timeInterval, data);
-
         return reportingAttributes;
     }
+
+    // private ReportingAttributes computeLCPByHour(final String business_id, final String report, final String timeInterval, final TimeInterval
+    // timeIntervalEnum,
+    // final String startTime, final String endTime) throws Exception
+    // {
+    // final ReportingAttributes reportingAttributes;
+    // final List<Data> data = new ArrayList<>();
+    // final List<TimeFrame> timeframes = ReportService.getTimeFrameList(timeIntervalEnum, startTime, endTime);
+    //
+    // for (final TimeFrame t : timeframes) {
+    //
+    // final List<Object> payRates = FetchData.getPayRateByHour(business_id, t.getStart(), t.getEnd());
+    // final List<String> checkIDs = FetchData.getCheckIDs(business_id, t.getStart(), t.getEnd());
+    // final List<Object> prices = FetchData.getPricesForChecks(business_id, checkIDs);
+    //
+    // final double totalPay = ReportService.computeSum(payRates);
+    // final double totalPrice = ReportService.computeSum(prices);
+    // final double value;
+    // if ((totalPrice == 0) || (totalPay == 0)) {
+    // value = 0;
+    // }
+    // else {
+    // value = ((totalPay / totalPrice) * 100);
+    //
+    // }
+    // System.out.println("totalLaborCost: " + totalPay);
+    // System.out.println("totalPrice: " + totalPrice);
+    // data.add(new Data(t, Math.round(value)));
+    // }
+    //
+    // reportingAttributes = new LaborCostPercentage(report, timeInterval, data);
+    //
+    // return reportingAttributes;
+    //
+    // }
 
 }
