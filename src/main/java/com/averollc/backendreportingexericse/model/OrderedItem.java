@@ -17,10 +17,7 @@ public class OrderedItem
     private ZonedDateTime created_at;
 
     public OrderedItem()
-    {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+    {}
 
     public OrderedItem(final String id, final String business_id, final String employee_id, final String check_id, final String item_id, final String name,
         final double cost, final double price, final boolean voided, final ZonedDateTime updated_at, final ZonedDateTime created_at)

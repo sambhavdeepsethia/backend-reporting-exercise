@@ -1,17 +1,25 @@
 package com.averollc.backendreportingexericse.model;
 
-public class EmployeeData extends Data {
-	
+public class EmployeeData extends Data
+{
     private final String employee;
-      
- 	public EmployeeData(TimeFrame timeFrame, double value, String employee) {
-		super(timeFrame, value);
-		this.employee = employee;
-	}
 
-	@Override
+    public EmployeeData(final TimeFrame timeFrame, final double value, final String employee)
+    {
+        super(timeFrame, value);
+        this.employee = employee;
+        System.out.println("this.employess: " + employee);
+    }
+
+    public String getEmployee()
+    {
+        return employee;
+    }
+
+    @Override
     public String toString()
     {
-        return "EmployeeData [timeFrame = "+this.getTimeFrame()+", value = "+this.getValue()+ ", employee = "+employee+"]";
+        return "EmployeeData [employee=" + employee + "]";
     }
+
 }

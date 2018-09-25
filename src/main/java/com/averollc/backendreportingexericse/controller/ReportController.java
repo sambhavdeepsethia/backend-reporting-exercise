@@ -1,6 +1,7 @@
 package com.averollc.backendreportingexericse.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.averollc.backendreportingexericse.dao.FetchData;
 import com.averollc.backendreportingexericse.model.Check;
 import com.averollc.backendreportingexericse.model.Data;
+import com.averollc.backendreportingexericse.model.EmployeeData;
+import com.averollc.backendreportingexericse.model.EmployeeGrossSales;
 import com.averollc.backendreportingexericse.model.FoodCostPercentage;
 import com.averollc.backendreportingexericse.model.LaborCostPercentage;
 import com.averollc.backendreportingexericse.model.LaborEntry;
@@ -130,8 +133,8 @@ public class ReportController
     private ReportingAttributes computeEGS(final String business_id, final String report, final String timeInterval, final TimeInterval timeIntervalEnum,
         final String startTime, final String endTime) throws Exception
     {
-        final ReportingAttributes reportingAttributes = null;
-        final List<Data> data = new ArrayList<>();
+        ReportingAttributes reportingAttributes = null;
+        final List<EmployeeData> employeeData = new ArrayList<>();
         final List<TimeFrame> timeframes = ReportService.getTimeFrameList(timeIntervalEnum, startTime, endTime);
 
         for (final TimeFrame t : timeframes) {
@@ -156,7 +159,21 @@ public class ReportController
                 }
             }
 
+            for (final Map.Entry<String, String> entry : map.entrySet()) {
+
+                final String name = entry.getValue();
+                final double egs = map2.get(entry.getKey());
+
+                System.out.println("name: " + name + ", egs:" + egs);
+                employeeData.add(new EmployeeData(t, egs, name));
+
+            }
+
+            System.out.println("Map1: " + map.size() + ", Map2: " + map2.size());
+
         }
+        Collections.sort(employeeData, (o1, o2) -> o1.getEmployee().compareTo(o2.getEmployee()));
+        reportingAttributes = new EmployeeGrossSales(report, timeInterval, employeeData);
         return reportingAttributes;
     }
 

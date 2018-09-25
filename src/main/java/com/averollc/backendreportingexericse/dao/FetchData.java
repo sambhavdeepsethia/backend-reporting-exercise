@@ -58,7 +58,6 @@ public class FetchData
      */
     public static List<Object> getPayRateByHour(final String business_id, final String startTime, final String endTime) throws IOException
     {
-
         final File laborEntriesJson = new File(baseDir + "laborEntries" + File.separator + "laborEntries.json");
         final Filter payRateFilter = Filter.filter(Criteria.where("business_id").is(business_id).and("clock_in").lte(startTime).and("clock_out").gte(endTime));
         final List<Object> payRates = JsonPath.parse(laborEntriesJson).read("$.data[?].pay_rate", payRateFilter);

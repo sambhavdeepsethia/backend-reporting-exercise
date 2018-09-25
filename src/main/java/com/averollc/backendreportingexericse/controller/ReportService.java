@@ -8,27 +8,35 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.averollc.backendreportingexericse.model.LaborEntry;
 import com.averollc.backendreportingexericse.model.TimeFrame;
 import com.averollc.backendreportingexericse.model.TimeInterval;
+import com.google.common.base.Preconditions;
 
 public class ReportService
 {
     private static final Logger logger = LogManager.getLogger(ReportService.class);
 
-    public static List<TimeFrame> getTimeFrameList(final TimeInterval timeIntervalEnum, final String startTime, final String endTime) throws Exception
+    public static List<TimeFrame> getTimeFrameList(final TimeInterval timeIntervalEnum, final String startTime, final String endTime)
     {
+        Preconditions.checkNotNull(timeIntervalEnum);
+        Preconditions.checkNotNull(startTime);
+        Preconditions.checkNotNull(endTime);
+
         final DateTimeFormatter formatter = new DateTimeFormatterBuilder().appendInstant(3).toFormatter();
         final ZonedDateTime zonedStartTime = ZonedDateTime.parse(startTime);
         final ZonedDateTime zonedEndTime = ZonedDateTime.parse(endTime);
 
-        if (zonedStartTime.isAfter(zonedEndTime)) {
-            logger.error("StartDate {} cannot be after EndDate {}", zonedStartTime, zonedEndTime);
-            throw new Exception("StartDate cannot be after EndDate");
-        }
+        Preconditions.checkState(zonedStartTime.isBefore(zonedEndTime), "StartDate %s cannot be after EndDate %s", zonedStartTime, zonedEndTime);
+
+        // if (zonedStartTime.isAfter(zonedEndTime)) {
+        // logger.error("StartDate {} cannot be after EndDate {}", zonedStartTime, zonedEndTime);
+        // throw new Exception("StartDate cannot be after EndDate");
+        // }
 
         final List<TimeFrame> timeFrames = new ArrayList<>();
         switch (timeIntervalEnum) {
@@ -68,17 +76,17 @@ public class ReportService
 
         default:
             System.out.println("Inside defalut");
-            throw new Exception("Invalid timeInterval");
+            // throw new Exception("Invalid timeInterval");
 
         }
         return timeFrames;
     }
 
-    public static double computeSum(final List<Object> objectList)
+    public static double computeSum(final List<Object> objectList) throws NumberFormatException
     {
         logger.debug("Compute Sum, input list:{}", objectList);
         double sum = 0;
-        for (final Object o : objectList) {
+        for (final Object o : CollectionUtils.emptyIfNull(objectList)) {
             sum += Double.parseDouble(o.toString());
         }
         logger.debug("Sum:{}", sum);
@@ -87,6 +95,12 @@ public class ReportService
 
     public static double computeTotalLaborCost(final List<LaborEntry> laborEntires, final String startTime, final String endTime)
     {
+        // if (laborEntires == null) {
+        // throw new NullPointerException();
+        // }
+        //
+        // Preconditions.checkNotNull(laborEntires);
+
         double totalLaborCost = 0;
         final ZonedDateTime start = ZonedDateTime.parse(startTime);
         final ZonedDateTime end = ZonedDateTime.parse(endTime);
@@ -108,7 +122,6 @@ public class ReportService
             totalLaborCost += (hours * l.getPay_rate());
 
         }
-
         return totalLaborCost;
     }
 
