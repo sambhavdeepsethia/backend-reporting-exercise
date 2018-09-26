@@ -15,11 +15,27 @@ import org.springframework.web.client.RestTemplate;
 
 import com.jayway.jsonpath.JsonPath;
 
+/**
+ * This class contains method which fetches and stores data required by the application.
+ *
+ * @author Sambhav D Sethia
+ * @version 1.0
+ * @since 9/12/2018
+ */
 @RestController
 public class DataConsumer
 {
 
-    // final static String[] posAPIs = {"businesses", "menuItems", "checks"};
+    /**
+     * Invokes the POS REST APIs and fetches all the data and stores them as .json files on disk.
+     *
+     * @param baseDir
+     * @param baseURI
+     * @param posAPIs
+     * @param headerFieldName
+     * @param headerFieldValue
+     * @throws IOException
+     */
     public static void dataProcessor(final String baseDir, final String baseURI, final String[] posAPIs, final String headerFieldName,
         final String headerFieldValue) throws IOException
     {
@@ -29,7 +45,7 @@ public class DataConsumer
             final HttpHeaders headers = new HttpHeaders();
             headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
             headers.add(headerFieldName, headerFieldValue);
-            final HttpEntity<String> entity = new HttpEntity<String>(headers);
+            final HttpEntity<String> entity = new HttpEntity<>(headers);
             final String jsonCount = restTemplate.exchange(baseURI + api + "?limit=0", HttpMethod.GET, entity, String.class).getBody();
             final int count = JsonPath.read(jsonCount, "$.count");
             final String fileName = baseDir + File.separator + api + File.separator + api + ".json";
@@ -40,6 +56,7 @@ public class DataConsumer
             final String jsonData = restTemplate.exchange(baseURI + api + "?limit=" + count, HttpMethod.GET, entity, String.class).getBody();
             dataWriter(jsonData, fileName);
 
+            // TODO Collect data based on the limit of the URI.
             // final int limit = 500;
             // int index = 0;
             // int offset = 0;

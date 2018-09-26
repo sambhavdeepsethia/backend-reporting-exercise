@@ -1,25 +1,30 @@
 package com.averollc.backendreportingexericse;
 
-import java.io.File;
 import java.io.IOException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import com.averollc.backendreportingexericse.dao.FetchData;
+
+/**
+ * This is the main Spring Boot application class
+ *
+ * @author Sambhav D Sethia
+ * @version 1.0
+ * @since 9/12/2018
+ */
 @SpringBootApplication
 public class BackendReportingExerciseApplication
 {
 
+    Logger logger = LogManager.getLogger(BackendReportingExerciseApplication.class);
+
     public static void main(final String[] args) throws IOException
     {
-
-        final String baseDir = System.getProperty("user.dir") + File.separator + "data" + File.separator;
-        final String business_id = "b2aeb27b-c85c-4ad8-83d4-d9511063d418";
-        final String startTime = "2018-06-01T00:00:00.000Z";
-        final String endTime = "2018-06-02T00:00:00.000Z";
-        final File laborEntriesJson = new File(baseDir + "laborEntries" + File.separator + "laborEntries.json");
-
-        // FetchData.getData();
+        FetchData.getData();
         SpringApplication.run(BackendReportingExerciseApplication.class, args);
 
     }

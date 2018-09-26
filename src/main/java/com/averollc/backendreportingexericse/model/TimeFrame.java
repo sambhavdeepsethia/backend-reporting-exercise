@@ -3,6 +3,13 @@ package com.averollc.backendreportingexericse.model;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
+/**
+ * Represent the timeFrame in a response.
+ *
+ * @author Sambhav D Sethia
+ * @version 1.0
+ * @since 9/12/2018
+ */
 public class TimeFrame
 {
 

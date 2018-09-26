@@ -17,11 +17,30 @@ import com.averollc.backendreportingexericse.model.TimeFrame;
 import com.averollc.backendreportingexericse.model.TimeInterval;
 import com.google.common.base.Preconditions;
 
+/**
+ * ReportService contains helper functions which are called by ReportController
+ *
+ * @author Sambhav D Sethia
+ * @version 1.0
+ * @since 9/12/2018
+ */
 public class ReportService
 {
     private static final Logger logger = LogManager.getLogger(ReportService.class);
 
+    /**
+     * This method accepts start and end datetime and
+     * returns a list of TimeFrame objects based on the passed TimeInterval.
+     * If an invalid TimeInterval is passed then an IllegalArgumentException will be thrown.
+     *
+     * @param timeIntervalEnum
+     * @param startTime
+     * @param endTime
+     * @return List<TimeFrame>
+     * @throws IllegalArgumentException
+     */
     public static List<TimeFrame> getTimeFrameList(final TimeInterval timeIntervalEnum, final String startTime, final String endTime)
+        throws IllegalArgumentException
     {
         Preconditions.checkNotNull(timeIntervalEnum);
         Preconditions.checkNotNull(startTime);
@@ -33,55 +52,47 @@ public class ReportService
 
         Preconditions.checkState(zonedStartTime.isBefore(zonedEndTime), "StartDate %s cannot be after EndDate %s", zonedStartTime, zonedEndTime);
 
-        // if (zonedStartTime.isAfter(zonedEndTime)) {
-        // logger.error("StartDate {} cannot be after EndDate {}", zonedStartTime, zonedEndTime);
-        // throw new Exception("StartDate cannot be after EndDate");
-        // }
-
         final List<TimeFrame> timeFrames = new ArrayList<>();
         switch (timeIntervalEnum) {
         case HOUR:
             for (ZonedDateTime date = zonedStartTime; date.isBefore(zonedEndTime); date = date.plusHours(1)) {
                 timeFrames.add(new TimeFrame(date.format(formatter).toString(), date.plusHours(1).format(formatter).toString()));
             }
-            for (final TimeFrame t : timeFrames) {
-                logger.debug("StartTime: {}, EndTime: {}", t.getStart(), t.getEnd());
-                System.out.println("StartTime: " + t.getStart() + ", EndTime: " + t.getEnd());
-            }
+
         break;
         case DAY:
             for (ZonedDateTime date = zonedStartTime; date.isBefore(zonedEndTime); date = date.plusDays(1)) {
                 timeFrames.add(new TimeFrame(date.format(formatter).toString(), date.plusDays(1).format(formatter).toString()));
             }
-            for (final TimeFrame t : timeFrames) {
-                System.out.println("StartTime: " + t.getStart() + ", EndTime: " + t.getEnd());
-            }
+
         break;
         case WEEK:
             for (ZonedDateTime date = zonedStartTime; date.isBefore(zonedEndTime); date = date.plusWeeks(1)) {
                 timeFrames.add(new TimeFrame(date.format(formatter).toString(), date.plusWeeks(1).format(formatter).toString()));
             }
-            for (final TimeFrame t : timeFrames) {
-                System.out.println("StartTime: " + t.getStart() + ", EndTime: " + t.getEnd());
-            }
+
         break;
         case MONTH:
             for (ZonedDateTime date = zonedStartTime; date.isBefore(zonedEndTime); date = date.plusMonths(1)) {
                 timeFrames.add(new TimeFrame(date.format(formatter).toString(), date.plusMonths(1).format(formatter).toString()));
             }
-            for (final TimeFrame t : timeFrames) {
-                System.out.println("StartTime: " + t.getStart() + ", EndTime: " + t.getEnd());
-            }
         break;
 
         default:
-            System.out.println("Inside defalut");
-            // throw new Exception("Invalid timeInterval");
+            // An internal exception is thrown by TimeInterval enum class.
 
         }
         return timeFrames;
     }
 
+    /**
+     * This method adds a List of java.lang.Object and returns their sum in double.
+     * It is important to the passed List<Object> should either be Double or Integer
+     * else NumberFormartException will be thrown.
+     *
+     * @return double
+     * @throws NumberFormatException
+     */
     public static double computeSum(final List<Object> objectList) throws NumberFormatException
     {
         logger.debug("Compute Sum, input list:{}", objectList);
@@ -93,28 +104,39 @@ public class ReportService
         return sum;
     }
 
+    /**
+     * This method computes total cost of labor for the give datetime range.
+     * 
+     * @param        List<LaborEntry>
+     * @param String
+     *               startTime
+     * @param String
+     *               endTime
+     * @return double
+     */
     public static double computeTotalLaborCost(final List<LaborEntry> laborEntires, final String startTime, final String endTime)
     {
-        // if (laborEntires == null) {
-        // throw new NullPointerException();
-        // }
-        //
-        // Preconditions.checkNotNull(laborEntires);
+
+        Preconditions.checkNotNull(laborEntires);
+        Preconditions.checkNotNull(startTime);
+        Preconditions.checkNotNull(endTime);
+
+        final ZonedDateTime zonedStartTime = ZonedDateTime.parse(startTime);
+        final ZonedDateTime zonedEndTime = ZonedDateTime.parse(endTime);
+        Preconditions.checkState(zonedStartTime.isBefore(zonedEndTime), "StartDate %s cannot be after EndDate %s", zonedStartTime, zonedEndTime);
 
         double totalLaborCost = 0;
-        final ZonedDateTime start = ZonedDateTime.parse(startTime);
-        final ZonedDateTime end = ZonedDateTime.parse(endTime);
 
         for (final LaborEntry l : laborEntires) {
             double hours = 0;
             LocalDateTime cin = l.getClock_in().toLocalDateTime();
             LocalDateTime cout = l.getClock_out().toLocalDateTime();
 
-            if (l.getClock_in().isBefore(start)) {
-                cin = start.toLocalDateTime();
+            if (l.getClock_in().isBefore(zonedStartTime)) {
+                cin = zonedStartTime.toLocalDateTime();
             }
-            if (l.getClock_out().isAfter(end)) {
-                cout = end.toLocalDateTime();
+            if (l.getClock_out().isAfter(zonedEndTime)) {
+                cout = zonedEndTime.toLocalDateTime();
             }
 
             final Duration d = Duration.between(cin, cout);

@@ -1,5 +1,15 @@
 package com.averollc.backendreportingexericse.model;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
+
+/**
+ * Parent response class.
+ *
+ * @author Sambhav D Sethia
+ * @version 1.0
+ * @since 9/12/2018
+ */
 public class ReportingAttributes
 {
     private final String report;
@@ -25,6 +35,25 @@ public class ReportingAttributes
     @Override
     public String toString()
     {
-        return "ReportingAttributes: [report = " + report + ", timeInterval = " + timeInterval + "]";
+        return MoreObjects.toStringHelper(this).add("report", report) //$NON-NLS-1$
+            .add("timeInterval", timeInterval) //$NON-NLS-1$
+            .toString();
     }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hashCode(report, timeInterval);
+    }
+
+    @Override
+    public boolean equals(final Object object)
+    {
+        if (object instanceof ReportingAttributes) {
+            final ReportingAttributes that = (ReportingAttributes) object;
+            return Objects.equal(report, that.report) && Objects.equal(timeInterval, that.timeInterval);
+        }
+        return false;
+    }
+
 }

@@ -2,6 +2,16 @@ package com.averollc.backendreportingexericse.model;
 
 import java.time.ZonedDateTime;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
+
+/**
+ * Represents a Check
+ *
+ * @author Sambhav D Sethia
+ * @version 1.0
+ * @since 9/12/2018
+ */
 public class Check
 {
     private String id;
@@ -74,99 +84,33 @@ public class Check
     @Override
     public String toString()
     {
-        return "Check [id=" + id + ", business_id=" + business_id + ", employee_id=" + employee_id + ", name=" + name + ", closed=" + closed + ", closed_at="
-            + closed_at + ", updated_at=" + updated_at + ", created_at=" + created_at + "]";
+        return MoreObjects.toStringHelper(this).add("id", id) //$NON-NLS-1$
+            .add("business_id", business_id) //$NON-NLS-1$
+            .add("employee_id", employee_id) //$NON-NLS-1$
+            .add("name", name) //$NON-NLS-1$
+            .add("closed", closed) //$NON-NLS-1$
+            .add("closed_at", closed_at) //$NON-NLS-1$
+            .add("updated_at", updated_at) //$NON-NLS-1$
+            .add("created_at", created_at) //$NON-NLS-1$
+            .toString();
     }
 
     @Override
     public int hashCode()
     {
-        final int prime = 31;
-        int result = 1;
-        result = (prime * result) + ((business_id == null) ? 0 : business_id.hashCode());
-        result = (prime * result) + (closed ? 1231 : 1237);
-        result = (prime * result) + ((closed_at == null) ? 0 : closed_at.hashCode());
-        result = (prime * result) + ((created_at == null) ? 0 : created_at.hashCode());
-        result = (prime * result) + ((employee_id == null) ? 0 : employee_id.hashCode());
-        result = (prime * result) + ((id == null) ? 0 : id.hashCode());
-        result = (prime * result) + ((name == null) ? 0 : name.hashCode());
-        result = (prime * result) + ((updated_at == null) ? 0 : updated_at.hashCode());
-        return result;
+        return Objects.hashCode(id, business_id, employee_id, name, closed, closed_at, updated_at, created_at);
     }
 
     @Override
-    public boolean equals(final Object obj)
+    public boolean equals(final Object object)
     {
-        if (this == obj) {
-            return true;
+        if (object instanceof Check) {
+            final Check that = (Check) object;
+            return Objects.equal(id, that.id) && Objects.equal(business_id, that.business_id) && Objects.equal(employee_id, that.employee_id)
+                && Objects.equal(name, that.name) && (closed == that.closed) && Objects.equal(closed_at, that.closed_at)
+                && Objects.equal(updated_at, that.updated_at) && Objects.equal(created_at, that.created_at);
         }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Check other = (Check) obj;
-        if (business_id == null) {
-            if (other.business_id != null) {
-                return false;
-            }
-        }
-        else if (!business_id.equals(other.business_id)) {
-            return false;
-        }
-        if (closed != other.closed) {
-            return false;
-        }
-        if (closed_at == null) {
-            if (other.closed_at != null) {
-                return false;
-            }
-        }
-        else if (!closed_at.equals(other.closed_at)) {
-            return false;
-        }
-        if (created_at == null) {
-            if (other.created_at != null) {
-                return false;
-            }
-        }
-        else if (!created_at.equals(other.created_at)) {
-            return false;
-        }
-        if (employee_id == null) {
-            if (other.employee_id != null) {
-                return false;
-            }
-        }
-        else if (!employee_id.equals(other.employee_id)) {
-            return false;
-        }
-        if (id == null) {
-            if (other.id != null) {
-                return false;
-            }
-        }
-        else if (!id.equals(other.id)) {
-            return false;
-        }
-        if (name == null) {
-            if (other.name != null) {
-                return false;
-            }
-        }
-        else if (!name.equals(other.name)) {
-            return false;
-        }
-        if (updated_at == null) {
-            if (other.updated_at != null) {
-                return false;
-            }
-        }
-        else if (!updated_at.equals(other.updated_at)) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
 }

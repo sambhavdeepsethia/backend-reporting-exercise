@@ -1,5 +1,15 @@
 package com.averollc.backendreportingexericse.model;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
+
+/**
+ * Represent the data array of the response.
+ *
+ * @author Sambhav D Sethia
+ * @version 1.0
+ * @since 9/12/2018
+ */
 public class Data
 {
 
@@ -25,46 +35,25 @@ public class Data
     @Override
     public String toString()
     {
-        return "Data [timeFrame=" + timeFrame + ", value=" + value + "]";
+        return MoreObjects.toStringHelper(this).add("timeFrame", timeFrame) //$NON-NLS-1$
+            .add("value", value) //$NON-NLS-1$
+            .toString();
     }
 
     @Override
     public int hashCode()
     {
-        final int prime = 31;
-        int result = 1;
-        result = (prime * result) + ((timeFrame == null) ? 0 : timeFrame.hashCode());
-        long temp;
-        temp = Double.doubleToLongBits(value);
-        result = (prime * result) + (int) (temp ^ (temp >>> 32));
-        return result;
+        return Objects.hashCode(timeFrame, value);
     }
 
     @Override
-    public boolean equals(final Object obj)
+    public boolean equals(final Object object)
     {
-        if (this == obj) {
-            return true;
+        if (object instanceof Data) {
+            final Data that = (Data) object;
+            return Objects.equal(timeFrame, that.timeFrame) && (value == that.value);
         }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Data other = (Data) obj;
-        if (timeFrame == null) {
-            if (other.timeFrame != null) {
-                return false;
-            }
-        }
-        else if (!timeFrame.equals(other.timeFrame)) {
-            return false;
-        }
-        if (Double.doubleToLongBits(value) != Double.doubleToLongBits(other.value)) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
 }

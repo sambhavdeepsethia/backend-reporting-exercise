@@ -2,6 +2,16 @@ package com.averollc.backendreportingexericse.model;
 
 import java.time.ZonedDateTime;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
+
+/**
+ * Represents a LaborEntry
+ *
+ * @author Sambhav D Sethia
+ * @version 1.0
+ * @since 9/12/2018
+ */
 public class LaborEntry
 {
     private String id;
@@ -19,6 +29,17 @@ public class LaborEntry
         super();
     }
 
+    /**
+     * @param id
+     * @param business_id
+     * @param employee_id
+     * @param name
+     * @param clock_in
+     * @param clock_out
+     * @param pay_rate
+     * @param updated_at
+     * @param created_at
+     */
     public LaborEntry(final String id, final String business_id, final String employee_id, final String name, final ZonedDateTime clock_in,
         final ZonedDateTime clock_out, final double pay_rate, final ZonedDateTime updated_at, final ZonedDateTime created_at)
     {
@@ -81,8 +102,34 @@ public class LaborEntry
     @Override
     public String toString()
     {
-        return "LaborEntry [id=" + id + ", business_id=" + business_id + ", employee_id=" + employee_id + ", name=" + name + ", clock_in=" + clock_in
-            + ", clock_out=" + clock_out + ", pay_rate=" + pay_rate + ", updated_at=" + updated_at + ", created_at=" + created_at + "]";
+        return MoreObjects.toStringHelper(this).add("id", id) //$NON-NLS-1$
+            .add("business_id", business_id) //$NON-NLS-1$
+            .add("employee_id", employee_id) //$NON-NLS-1$
+            .add("name", name) //$NON-NLS-1$
+            .add("clock_in", clock_in) //$NON-NLS-1$
+            .add("clock_out", clock_out) //$NON-NLS-1$
+            .add("pay_rate", pay_rate) //$NON-NLS-1$
+            .add("updated_at", updated_at) //$NON-NLS-1$
+            .add("created_at", created_at) //$NON-NLS-1$
+            .toString();
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hashCode(id, business_id, employee_id, name, clock_in, clock_out, pay_rate, updated_at, created_at);
+    }
+
+    @Override
+    public boolean equals(final Object object)
+    {
+        if (object instanceof LaborEntry) {
+            final LaborEntry that = (LaborEntry) object;
+            return Objects.equal(id, that.id) && Objects.equal(business_id, that.business_id) && Objects.equal(employee_id, that.employee_id)
+                && Objects.equal(name, that.name) && Objects.equal(clock_in, that.clock_in) && Objects.equal(clock_out, that.clock_out)
+                && (pay_rate == that.pay_rate) && Objects.equal(updated_at, that.updated_at) && Objects.equal(created_at, that.created_at);
+        }
+        return false;
     }
 
 }
