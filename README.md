@@ -7,18 +7,17 @@ The following is Avero's Reporting API business soultion for [Avero's Backend Co
 * [Reporting API Documentation](#reporting-api-documentation)
 
 ## Prerequisites
-Before performing the setup, please have the following items installed in your environment and set the CLASSPATH variable accordingly.
+Before performing the setup, please ensure the following items installed in your environment and Java and Maven are set in environmet variables.
 * Java JDK 1.8 or higher
 * Apache Maven 3.5 or higher
 * git 2.0 or higher
 
 ## Setup
-Before starting with the setup, ensure you have Java 1.8 and Maven 3.5+ installed and configured in your environment.
 Download the repo from GIT using the following command in your terminal:
 
 ```git clone git@github.com:sambhavdeepsethia/backend-reporting-exercise.git```
 
-Next, change directory to `backend-reporting-exercise/`, this is going to be your **base directory** for the project and it contains the entire project with its pom.xml file. Finally, build the project by typing the command:
+Change directory to `backend-reporting-exercise/`, this is going to be your **base directory** for the project and it contains the entire project with its pom.xml file. Finally, build the project by typing the command:
 
 `mvn clean install`
 
