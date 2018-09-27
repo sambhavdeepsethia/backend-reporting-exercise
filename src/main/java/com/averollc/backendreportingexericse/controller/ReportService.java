@@ -42,6 +42,7 @@ public class ReportService
     public static List<TimeFrame> getTimeFrameList(final TimeInterval timeIntervalEnum, final String startTime, final String endTime)
         throws IllegalArgumentException
     {
+        logger.debug("Entering getTimeFrameList...");
         Preconditions.checkNotNull(timeIntervalEnum);
         Preconditions.checkNotNull(startTime);
         Preconditions.checkNotNull(endTime);
@@ -79,8 +80,6 @@ public class ReportService
         break;
 
         default:
-            // An internal exception is thrown by TimeInterval enum class.
-
         }
         return timeFrames;
     }
@@ -106,7 +105,7 @@ public class ReportService
 
     /**
      * This method computes total cost of labor for the give datetime range.
-     * 
+     *
      * @param        List<LaborEntry>
      * @param String
      *               startTime

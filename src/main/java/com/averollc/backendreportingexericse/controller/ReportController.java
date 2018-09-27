@@ -37,7 +37,7 @@ import com.google.common.base.Preconditions;
 @RestController
 public class ReportController
 {
-    Logger logger = LogManager.getLogger(ReportController.class);
+    private static final Logger logger = LogManager.getLogger(ReportController.class);
 
     /**
      * @param business_id
@@ -83,10 +83,11 @@ public class ReportController
     private ReportingAttributes computeLCP(final String business_id, final String report, final String timeInterval, final TimeInterval timeIntervalEnum,
         final String startTime, final String endTime) throws Exception
     {
+        logger.debug("Entering computeLCP...");
         final ReportingAttributes reportingAttributes;
         final List<Data> data = new ArrayList<>();
         final List<TimeFrame> timeframes = ReportService.getTimeFrameList(timeIntervalEnum, startTime, endTime);
-
+        logger.debug("Timeframes {}, StartTime {}", timeframes, startTime);
         for (final TimeFrame t : timeframes) {
 
             final List<LaborEntry> laborEntires = FetchData.getLaborEntries(business_id, t.getStart(), t.getEnd());

@@ -27,4 +27,4 @@
 /mvnw
 /mvnw.cmd
 /.mvn
-mylogfile.log
+/logs
