@@ -1,5 +1,5 @@
 # Backend Reporting Exercise
-The following is Avero's Reporting API business soultion for Avero's Backend Coding Exercise.
+The following is Avero's Reporting API business soultion for [Avero's Backend Coding Exercise.](https://github.com/AveroLLC/reporting-api-exercise)
 * [Prerequisites](#prerequistes)
 * [Setup](#setup)
 * [Running the Application](#running-the-application)
@@ -29,8 +29,18 @@ After the build is successful, type the following command from the base director
 
 ```java -jar target/backend-reporting-exercise-1.0-SNAPSHOT.jar```
 
-This will start the application server and it may take a few minutes until the application is up and running.
+This will start the application server and it may take a few minutes until the application is up and running. Alternatively you can copy the jar to a folder of your choice, which has read and write permissions and type the command `java -jar <jarname>` to run the application.
 
+### Data Fetch
+Before the application starts, a GET request is made to all the [POS APIs](https://github.com/AveroLLC/reporting-api-exercise#pos-entities) and the corresponding data is stored as .json file in `data/` folder under the base directory, the data will remain as is while the application is running and will be rewritten when the application is started
+
+### Logs
+The application runs under `INFO` logging level and logs are stored under `logs/` directory under the base directory
+
+
+## Report Types
+
+These are the technical definitions of the reports implemented by the reporting api and also lists the assumption made during their computation. 
 ### Labor Cost Percentage
  - Abbreviated as **LCP**
  - Labor cost percentage is the percentage of the revenue that pays for labor. 
@@ -52,6 +62,7 @@ This will start the application server and it may take a few minutes until the a
  - Employee gross sales is the sum of the of the price charged for each item the employee sold. Voided Items excluded.
  - Calculate employee gross sales: **EGS = Sum(Selling Prices)**
  
+ **Note:** The [System Design]() document shows the interacations between the various components of the application
  
 # Reporting API Documentation
 
