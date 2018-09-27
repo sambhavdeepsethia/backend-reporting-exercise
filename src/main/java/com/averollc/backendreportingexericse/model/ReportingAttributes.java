@@ -35,9 +35,7 @@ public class ReportingAttributes
     @Override
     public String toString()
     {
-        return MoreObjects.toStringHelper(this).add("report", report) //$NON-NLS-1$
-            .add("timeInterval", timeInterval) //$NON-NLS-1$
-            .toString();
+        return MoreObjects.toStringHelper(this).add("report", report).add("timeInterval", timeInterval).toString();
     }
 
     @Override

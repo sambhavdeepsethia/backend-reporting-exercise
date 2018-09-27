@@ -84,15 +84,8 @@ public class Check
     @Override
     public String toString()
     {
-        return MoreObjects.toStringHelper(this).add("id", id) //$NON-NLS-1$
-            .add("business_id", business_id) //$NON-NLS-1$
-            .add("employee_id", employee_id) //$NON-NLS-1$
-            .add("name", name) //$NON-NLS-1$
-            .add("closed", closed) //$NON-NLS-1$
-            .add("closed_at", closed_at) //$NON-NLS-1$
-            .add("updated_at", updated_at) //$NON-NLS-1$
-            .add("created_at", created_at) //$NON-NLS-1$
-            .toString();
+        return MoreObjects.toStringHelper(this).add("id", id).add("business_id", business_id).add("employee_id", employee_id).add("name", name)
+            .add("closed", closed).add("closed_at", closed_at).add("updated_at", updated_at).add("created_at", created_at).toString();
     }
 
     @Override

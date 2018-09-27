@@ -87,7 +87,7 @@ public class ReportController
         final ReportingAttributes reportingAttributes;
         final List<Data> data = new ArrayList<>();
         final List<TimeFrame> timeframes = ReportService.getTimeFrameList(timeIntervalEnum, startTime, endTime);
-        logger.debug("Timeframes {}, StartTime {}", timeframes, startTime);
+        logger.debug("BusinessID {}, Timeframes {}, StartTime {}, EndTime {}", business_id, timeframes, startTime, endTime);
         for (final TimeFrame t : timeframes) {
 
             final List<LaborEntry> laborEntires = FetchData.getLaborEntries(business_id, t.getStart(), t.getEnd());
@@ -108,8 +108,12 @@ public class ReportController
 
             }
             data.add(new Data(t, value));
+            logger.debug("laborEntires {}", laborEntires);
+            logger.debug("checkIDs {}", checkIDs);
+            logger.debug("prices {}", prices);
+            logger.debug("totalLaborCost {}, totalPrice {}", totalLaborCost, totalPrice);
         }
-
+        logger.debug("data {}", data);
         reportingAttributes = new LaborCostPercentage(report, timeInterval, data);
 
         return reportingAttributes;
@@ -118,10 +122,11 @@ public class ReportController
     private ReportingAttributes computeFCP(final String business_id, final String report, final String timeInterval, final TimeInterval timeIntervalEnum,
         final String startTime, final String endTime) throws Exception
     {
-
+        logger.debug("Entering computeFCP...");
         final ReportingAttributes reportingAttributes;
         final List<Data> data = new ArrayList<>();
         final List<TimeFrame> timeframes = ReportService.getTimeFrameList(timeIntervalEnum, startTime, endTime);
+        logger.debug("BusinessID {}, Timeframes {}, StartTime {}, EndTime {}", business_id, timeframes, startTime, endTime);
 
         for (final TimeFrame t : timeframes) {
 
@@ -147,7 +152,13 @@ public class ReportController
                 value = (totalCost / totalPrice) * 100;
             }
             data.add(new Data(t, value));
+
+            logger.debug("orderedItems {}", orderedItems);
+            logger.debug("checkIDs {}", checkIDs);
+            logger.debug("totalCost {}, totalPrice {}", totalCost, totalPrice);
         }
+
+        logger.debug("data {}", data);
         reportingAttributes = new FoodCostPercentage(report, timeInterval, data);
         return reportingAttributes;
 
@@ -156,10 +167,11 @@ public class ReportController
     private ReportingAttributes computeEGS(final String business_id, final String report, final String timeInterval, final TimeInterval timeIntervalEnum,
         final String startTime, final String endTime) throws Exception
     {
+        logger.debug("Entering computeEGS...");
         ReportingAttributes reportingAttributes;
         final List<EmployeeData> employeeData = new ArrayList<>();
         final List<TimeFrame> timeframes = ReportService.getTimeFrameList(timeIntervalEnum, startTime, endTime);
-
+        logger.debug("BusinessID {}, Timeframes {}, StartTime {}, EndTime {}", business_id, timeframes, startTime, endTime);
         for (final TimeFrame t : timeframes) {
 
             final List<Check> checks = FetchData.getChecks(business_id, t.getStart(), t.getEnd());
@@ -171,6 +183,7 @@ public class ReportController
             });
 
             final List<OrderedItem> orderedItems = FetchData.getOrderedItems(business_id, checkIDs);
+            logger.debug("orderedItems {}", orderedItems);
             final Map<String, Double> employeeGrossSalesMap = new HashMap<>();
             for (final OrderedItem o : orderedItems) {
                 if (!o.isVoided()) {
@@ -183,7 +196,7 @@ public class ReportController
                     }
                 }
             }
-
+            logger.debug("employeeGrossSalesMap {}", employeeGrossSalesMap);
             for (final Map.Entry<String, String> entry : employeeMap.entrySet()) {
 
                 final String name = entry.getValue();
@@ -193,6 +206,7 @@ public class ReportController
 
             }
         }
+        logger.debug("employeeData {}", employeeData);
         Collections.sort(employeeData, (o1, o2) -> o1.getEmployee().compareTo(o2.getEmployee()));
         reportingAttributes = new EmployeeGrossSales(report, timeInterval, employeeData);
         return reportingAttributes;

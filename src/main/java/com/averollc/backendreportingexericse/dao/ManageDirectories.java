@@ -14,12 +14,12 @@ import java.util.Comparator;
  * @version 1.0
  * @since 9/12/2018
  */
-public class CreateDirectories
+public class ManageDirectories
 {
 
     /**
      * Creates directories recursively
-     * 
+     *
      * @param baseDir
      * @param dirs
      */
@@ -41,11 +41,11 @@ public class CreateDirectories
 
     /**
      * Deletes files and directories recursively.
-     * 
+     *
      * @param baseDir
      * @throws IOException
      */
-    // TODO: to be called after the Spring Boot application exit!
+    // TODO: to be called after the Spring Boot application exits via shutdown hook!
     public static void deleteDirectories(final String baseDir) throws IOException
     {
         final Path dataPath = Paths.get(baseDir);

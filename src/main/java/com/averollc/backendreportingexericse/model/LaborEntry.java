@@ -102,15 +102,8 @@ public class LaborEntry
     @Override
     public String toString()
     {
-        return MoreObjects.toStringHelper(this).add("id", id) //$NON-NLS-1$
-            .add("business_id", business_id) //$NON-NLS-1$
-            .add("employee_id", employee_id) //$NON-NLS-1$
-            .add("name", name) //$NON-NLS-1$
-            .add("clock_in", clock_in) //$NON-NLS-1$
-            .add("clock_out", clock_out) //$NON-NLS-1$
-            .add("pay_rate", pay_rate) //$NON-NLS-1$
-            .add("updated_at", updated_at) //$NON-NLS-1$
-            .add("created_at", created_at) //$NON-NLS-1$
+        return MoreObjects.toStringHelper(this).add("id", id).add("business_id", business_id).add("employee_id", employee_id).add("name", name)
+            .add("clock_in", clock_in).add("clock_out", clock_out).add("pay_rate", pay_rate).add("updated_at", updated_at).add("created_at", created_at)
             .toString();
     }
 

@@ -35,9 +35,7 @@ public class Data
     @Override
     public String toString()
     {
-        return MoreObjects.toStringHelper(this).add("timeFrame", timeFrame) //$NON-NLS-1$
-            .add("value", value) //$NON-NLS-1$
-            .toString();
+        return MoreObjects.toStringHelper(this).add("timeFrame", timeFrame).add("value", value).toString();
     }
 
     @Override

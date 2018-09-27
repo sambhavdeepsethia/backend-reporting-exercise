@@ -40,7 +40,7 @@ public class FetchData
     public static void getData() throws IOException
     {
 
-        CreateDirectories.createDirectories(baseDir, posAPIs);
+        ManageDirectories.createDirectories(baseDir, posAPIs);
         DataConsumer.dataProcessor(baseDir, baseURI, posAPIs, headerFieldName, headerFieldValue);
 
     }

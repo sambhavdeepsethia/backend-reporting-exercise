@@ -55,23 +55,6 @@ public class DataConsumer
             }
             final String jsonData = restTemplate.exchange(baseURI + api + "?limit=" + count, HttpMethod.GET, entity, String.class).getBody();
             dataWriter(jsonData, fileName);
-
-            // TODO Collect data based on the limit of the URI.
-            // final int limit = 500;
-            // int index = 0;
-            // int offset = 0;
-            //
-            // System.out.println("Count: " + count);
-            // while (index <= count) {
-            //
-            // final String jsonData = restTemplate.exchange(baseURI + api + "?limit=" + limit + "&offset=" + offset, HttpMethod.GET, entity, String.class)
-            // .getBody();
-            // dataWriter(jsonData, fileName);
-            // index = index + limit;
-            // offset = offset + limit;
-            //
-            // }
-
         }
 
     }

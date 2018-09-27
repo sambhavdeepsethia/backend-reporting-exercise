@@ -7,7 +7,7 @@ import com.google.common.base.Objects;
 
 /**
  * Represents an OrderedItem
- * 
+ *
  * @author Sambhav D Sethia
  * @version 1.0
  * @since 9/12/2018
@@ -103,18 +103,9 @@ public class OrderedItem
     @Override
     public String toString()
     {
-        return MoreObjects.toStringHelper(this).add("id", id) //$NON-NLS-1$
-            .add("business_id", business_id) //$NON-NLS-1$
-            .add("employee_id", employee_id) //$NON-NLS-1$
-            .add("check_id", check_id) //$NON-NLS-1$
-            .add("item_id", item_id) //$NON-NLS-1$
-            .add("name", name) //$NON-NLS-1$
-            .add("cost", cost) //$NON-NLS-1$
-            .add("price", price) //$NON-NLS-1$
-            .add("voided", voided) //$NON-NLS-1$
-            .add("updated_at", updated_at) //$NON-NLS-1$
-            .add("created_at", created_at) //$NON-NLS-1$
-            .toString();
+        return MoreObjects.toStringHelper(this).add("id", id).add("business_id", business_id).add("employee_id", employee_id).add("check_id", check_id)
+            .add("item_id", item_id).add("name", name).add("cost", cost).add("price", price).add("voided", voided).add("updated_at", updated_at)
+            .add("created_at", created_at).toString();
     }
 
     @Override
