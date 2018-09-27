@@ -3,12 +3,12 @@ The following is Avero's Reporting API business soultion for Avero's Backend Cod
 * [Prerequisites](#prerequistes)
 * [Setup](#setup)
 * [Running the Application](#running-the-application)
+* [Report Types](#report-types)
 * [Reporting API Documentation](#reporting-api-documentation)
-* [Request & Response Examples](#request--response-examples)
 
 ## Prerequisites
 Before performing the setup, please have the following items installed in your environment and set the CLASSPATH variable accordingly.
-* Java JRE 1.8 or higher
+* Java JDK 1.8 or higher
 * Apache Maven 3.5.4 or higher
 * git 2.0 or higher
 
@@ -31,7 +31,28 @@ After the build is successful, type the following command from the base director
 
 This will start the application server and it may take a few minutes until the application is up and running.
 
+### Labor Cost Percentage
+ - Abbreviated as **LCP**
+ - Labor cost percentage is the percentage of the revenue that pays for labor. 
+ - LCP is calculated as percentage of **LCP= TotalLaborCost/Sales**
+ - Assumptions made while calculating LCP for a give time frame are:
+	- If TotalLaborCost and Sales is zero then LCP is returned as 0.
+	- If only Sales is zero then LCP is returned as 100, indicating a 100% cost during the time period.
 
+### Food Cost Percentage 
+ - Abbreviated as **FCP**
+ - Food cost percentage is the difference between what it costs to produce an item and its price on the menu. 
+ - FCP is calculated as percentage of : **FCP = TotalItemCost / TotalSellingPrice**
+ - Assumptions made while calculating FCP for a give time frame are:
+	- If TotalItemCost and TotalSellingPrice is zero then FCP is returned as 0.
+	- If only TotalSellingPrice is zero then FCP is returned as 100, indicating a 100% cost during the time period.
+
+### Employee Gross Sales
+ - Abbreviated as **EGS**
+ - Employee gross sales is the sum of the of the price charged for each item the employee sold. Voided Items excluded.
+ - Calculate employee gross sales: **EGS = Sum(Selling Prices)**
+ 
+ 
 # Reporting API Documentation
 
 ## Connecting
