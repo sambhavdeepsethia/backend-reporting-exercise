@@ -7,10 +7,11 @@ The following is Avero's Reporting API business soultion for [Avero's Backend Co
 * [Reporting API Documentation](#reporting-api-documentation)
 
 ## Prerequisites
-Before performing the setup, please ensure the following items installed in your environment and Java and Maven are set in environmet variables.
+Before performing the setup, please have the following items installed in your environment and set the CLASSPATH variable accordingly.
 * Java JDK 1.8 or higher
 * Apache Maven 3.5 or higher
 * git 2.0 or higher
+* Ensure that JAVA_HOME and M2_HOME are configured in your environment variables
 
 ## Setup
 Download the repo from GIT using the following command in your terminal:
